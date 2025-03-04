@@ -1,0 +1,4 @@
+date	size'/'remotesize	flags(request:Update,Range state:File response:Modified,Chunked,gZipped)	statuscode	status ('servermsg')	MIME	Etag|Date	URL	localfile	(from URL)
+11:42:43	6991/6991	---M-Z	200	added ('OK')	text/html	date:Mon,%2003%20Mar%202025%2010:42:43%20GMT	https://rfw.lpgateway.logisticplanet.com/widget/show/name/login	/home/newhaguers/Bureaublad/website_clone/rfw.lpgateway.logisticplanet.com/widget/show/name/login.html	(from )
+11:42:45	1226/1226	---M--	404	error ('Not%20Found')	text/html	date:Mon,%2003%20Mar%202025%2010:42:44%20GMT	https://rfw.lpgateway.logisticplanet.com/robots.txt		(from )
+11:42:45	3585/3585	---M-Z	200	added ('OK')	text/html	date:Mon,%2003%20Mar%202025%2010:42:45%20GMT	https://rfw.lpgateway.logisticplanet.com/widget/show/name/keepalive.php	/home/newhaguers/Bureaublad/website_clone/rfw.lpgateway.logisticplanet.com/widget/show/name/keepalive.html	(from https://rfw.lpgateway.logisticplanet.com/widget/show/name/login)

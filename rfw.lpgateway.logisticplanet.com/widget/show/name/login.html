@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- Mirrored from rfw.lpgateway.logisticplanet.com/widget/show/name/login by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 03 Mar 2025 10:42:45 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<link rel="stylesheet" href="https://rfw.lpgateway.logisticplanet.com/js/jquery-ui/jquery-ui.min.css" type="text/css"/>
+
+
+<style>
+#update
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+}
+.lpgatewaywidget
+{
+	position: absolute;
+	font-family: Poppins;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #c0c0c0;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: grey;
+}
+
+#lplogin_titletext{
+top: 19px;
+left: 27px;
+height: 39px;
+width: 90%;
+font-size: 25px;
+font-weight: bold;
+color: #0894d1;
+text-align: center;
+}
+#lplogin_formfileds{
+top: 200px;
+left: 0px;
+height: 80px;
+width: 80%;
+font-size: 15px;
+position: relative;
+margin: auto;
+}
+#lplogin_loginbutton{
+top: 250px;
+left: 0px;
+height: 45px;
+width: 80%;
+font-size: 22px;
+font-weight: bold;
+text-align: center;
+line-height: 45px;
+background-color: #ffffff;
+color: #0894d1;
+border: 2px solid #0894d1;
+border-radius: 10px;
+position: relative;
+margin: auto;
+}
+#lplogin{
+top: 100px;
+left: auto;
+height: 400px;
+width: 480px;
+font-size: 40px;
+color: #000000;
+position: absolute;
+border: 2px solid #0894d1;
+z-index: 10;
+right: 150px;
+border-radius: 10px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+background-position: top 100px center;
+background-size: 60px;
+background-color: #ffffff;
+background-image: url('https://rfw.lpgateway.logisticplanet.com/img/10596/fingerprint.png');
+background-repeat: no-repeat;
+}
+#login_video{
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+position: absolute;
+}
+#login{
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+}
+</style>
+<script src="https://rfw.lpgateway.logisticplanet.com/js/jquery.js"></script>
+<script src="https://rfw.lpgateway.logisticplanet.com/js/jquery-ui/jquery-ui.js"></script>
+<script>
+$(
+	function()
+	{
+	 
+
+	// create the links on the widgets
+	makewidgetlinks();
+
+
+
+	
+		      // ajaxSend event to handle the tiemout of the sessionkeepalivepoller
+      			$(document).ajaxSend(
+         			function(event, request,settings)
+         			{
+            				// if it's not a keepalive poll
+            				if(!settings.url.endsWith('keepalive.html'))
+               					// reset keepalivecounter
+               					keepalivecounter = 600*2;
+
+         			}
+      			);
+
+
+      			// set an interval to keep the session alive
+      			setInterval(
+         			function()
+         			{
+            				sessionkeepalivepoller();
+         			},
+         			30000
+      			);
+
+	
+	}
+);
+
+
+
+// a stack variable to count down from for keepalive (in minutes*2 as we poll every 30secs)
+var keepalivecounter = 600*2;
+
+
+// a function for out session keepalive
+function sessionkeepalivepoller()
+{
+   // only continue is the keealive counter is positive
+   if(keepalivecounter <= 0)
+      return;
+
+   $.ajax(
+      {
+         url: '/keepalive.php',
+         success: function(data)
+         {
+            // decrease keepalivecounter
+            keepalivecounter--;
+         }
+      }
+   );
+}
+
+
+
+
+
+// a function to create clickable links on widgets
+function makewidgetlinks()
+{
+	// possible links for all widgets
+	$('.lpgatewaywidget').each(
+
+		function()
+		{
+			makewidgetclick($(this));
+		}
+	);
+
+
+}
+
+// construct the click event for a particular widget
+function makewidgetclick(widget)
+{
+	// remove the click event listener first
+	widget.off('click');
+
+
+	// if there is a link property
+	if(widget.attr('lplink'))
+	{
+
+		// set the cursor to show a pointer
+		widget.css('cursor','pointer');
+
+
+		// link target
+		if(widget.attr('lplinktarget') == 'same')
+		{
+			// link type
+			if(widget.attr('lplinktype') == 'local')
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+
+						// catch single slash for 'home'
+						var linkpath = widget.attr('lplink');
+
+						if(linkpath == 'https://rfw.lpgateway.logisticplanet.com/')
+							linkpath = '';
+
+
+							window.location = '/' + linkpath;
+					}
+				);
+			}
+			else
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+
+							window.location = widget.attr('lplink');
+					}
+				);
+			}
+		}
+		else
+		{
+			// link type
+			if(widget.attr('lplinktype') == 'local')
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+						window.open('/' + widget.attr('lplink'),'');
+					}
+				);
+			}
+			else
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+						window.open(widget.attr('lplink'));
+					}
+				);
+			}
+		}
+
+			
+	}
+	else
+	{
+		// set the cursor
+		widget.css('cursor','default');
+
+
+		// add a non propagating click event doing nothing
+		widget.click(
+			function(event)
+			{
+				event.stopPropagation();
+			}
+		);
+	}
+}
+
+
+
+
+	
+
+
+</script>
+</head>
+<body>
+<div  id="login"  recordid="243"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="login_text"><style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,700,900');
+body {
+font-family: 'Poppins', sans-serif;
+}
+</style>
+</span><div  id="login_video"  recordid="244"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="login_video_text"><style>
+video {
+display: block;
+width: 100%;
+height: 100%;
+object-fit: cover;
+z-index: -1;
+}
+</style>
+<video autoplay="" muted="" loop="">
+    <source src="http://www.logisticplanet.nl/wp-content/uploads/2023/05/pexels-marian-croitoru-5200378-3840x2160-30fps.mp4" autoplay="" loop="" muted="">
+  </video>
+</span><div  id="lplogin"  recordid="56"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="lplogin_text"><style>
+#lplogin_loginbutton {
+  background-color: white;
+  color: #0894d1;
+}
+
+#lplogin_loginbutton:hover {
+  background-color: #0894d1;
+  color: white;
+
+}
+</style>
+
+<script>
+$(
+   function()
+   {
+       $("#password").on('keyup', function (e) {
+           if (e.key === 'Enter' || e.keyCode === 13) {
+               document.loginform.submit();
+           }
+        });
+
+
+   }
+);   
+</script></span><div  id="lplogin_titletext"  recordid="57"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="lplogin_titletext_text">Welkom terug op LP Portal</span></div><div  id="lplogin_formfileds"  recordid="58"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="lplogin_formfileds_text"><style>
+input[type=text], input[type=password] {
+font-size: 15px;
+font-color: #0894d1;
+width: 95%;
+border-radius: 5px;
+border-width: 1px;
+border-color: #0894d1;
+padding: 6px;
+}
+</style>
+<form na<form="" name="loginform" method="post" action="https://rfw.lpgateway.logisticplanet.com/auth/login">
+<input type="text" name="username" placeholder="gebruikersnaam"><p>
+<input type="password" id="password" name="password" placeholder="wachtwoord"></p><p>
+</p></form></span></div><div  id="lplogin_loginbutton"  recordid="59"  lpuserlevel="0"  class="lpgatewaywidget" ><span id="lplogin_loginbutton_text"><script>
+
+$(
+function() {
+$('#lplogin_loginbutton').off('click');
+$('#lplogin_loginbutton').css('cursor','pointer');
+$('#lplogin_loginbutton').click(
+   function()
+   {
+      document.loginform.submit();
+   }
+);
+
+});
+
+</script>
+Inloggen</span></div></div></div></div></body> 

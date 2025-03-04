@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!-- Mirrored from rfw.lpgateway.logisticplanet.com/widget/show/name/keepalive.php by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 03 Mar 2025 10:42:46 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<link rel="stylesheet" href="https://rfw.lpgateway.logisticplanet.com/js/jquery-ui/jquery-ui.min.css" type="text/css"/>
+
+
+<style>
+#update
+{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+}
+.lpgatewaywidget
+{
+	position: absolute;
+	font-family: Poppins;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #c0c0c0;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: grey;
+}
+
+</style>
+<script src="https://rfw.lpgateway.logisticplanet.com/js/jquery.js"></script>
+<script src="https://rfw.lpgateway.logisticplanet.com/js/jquery-ui/jquery-ui.js"></script>
+<script>
+$(
+	function()
+	{
+	 
+
+	// create the links on the widgets
+	makewidgetlinks();
+
+
+
+	
+		      // ajaxSend event to handle the tiemout of the sessionkeepalivepoller
+      			$(document).ajaxSend(
+         			function(event, request,settings)
+         			{
+            				// if it's not a keepalive poll
+            				if(!settings.url.endsWith('keepalive.html'))
+               					// reset keepalivecounter
+               					keepalivecounter = 600*2;
+
+         			}
+      			);
+
+
+      			// set an interval to keep the session alive
+      			setInterval(
+         			function()
+         			{
+            				sessionkeepalivepoller();
+         			},
+         			30000
+      			);
+
+	
+	}
+);
+
+
+
+// a stack variable to count down from for keepalive (in minutes*2 as we poll every 30secs)
+var keepalivecounter = 600*2;
+
+
+// a function for out session keepalive
+function sessionkeepalivepoller()
+{
+   // only continue is the keealive counter is positive
+   if(keepalivecounter <= 0)
+      return;
+
+   $.ajax(
+      {
+         url: '/keepalive.php',
+         success: function(data)
+         {
+            // decrease keepalivecounter
+            keepalivecounter--;
+         }
+      }
+   );
+}
+
+
+
+
+
+// a function to create clickable links on widgets
+function makewidgetlinks()
+{
+	// possible links for all widgets
+	$('.lpgatewaywidget').each(
+
+		function()
+		{
+			makewidgetclick($(this));
+		}
+	);
+
+
+}
+
+// construct the click event for a particular widget
+function makewidgetclick(widget)
+{
+	// remove the click event listener first
+	widget.off('click');
+
+
+	// if there is a link property
+	if(widget.attr('lplink'))
+	{
+
+		// set the cursor to show a pointer
+		widget.css('cursor','pointer');
+
+
+		// link target
+		if(widget.attr('lplinktarget') == 'same')
+		{
+			// link type
+			if(widget.attr('lplinktype') == 'local')
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+
+						// catch single slash for 'home'
+						var linkpath = widget.attr('lplink');
+
+						if(linkpath == 'https://rfw.lpgateway.logisticplanet.com/')
+							linkpath = '';
+
+
+							window.location = '/' + linkpath;
+					}
+				);
+			}
+			else
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+
+							window.location = widget.attr('lplink');
+					}
+				);
+			}
+		}
+		else
+		{
+			// link type
+			if(widget.attr('lplinktype') == 'local')
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+						window.open('/' + widget.attr('lplink'),'');
+					}
+				);
+			}
+			else
+			{
+				widget.click(
+					function(event)
+					{
+						event.stopPropagation();
+						window.open(widget.attr('lplink'));
+					}
+				);
+			}
+		}
+
+			
+	}
+	else
+	{
+		// set the cursor
+		widget.css('cursor','default');
+
+
+		// add a non propagating click event doing nothing
+		widget.click(
+			function(event)
+			{
+				event.stopPropagation();
+			}
+		);
+	}
+}
+
+
+
+
+	
+
+
+</script>
+</head>
+<body>
+</body> 
